@@ -1,15 +1,18 @@
 //dependencies
-const {ApolloServer} = require('apollo-server');
+const { ApolloServer, PubSub } = require('apollo-server');
 const mongoose = require('mongoose');
 //relative ports
 const resolvers = require('./graphql/resolvers');
 const { MONGODB } = require('./config.js');
 const typeDefs = require('./graphql/typeDefs');
 
+const pubsub = new PubSub();
+
 //server
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    context: ({ req }) => ({ req, pubsub })
 });
 
 mongoose.connect(MONGODB, { useNewUrlParser: true }).then(() => {
