@@ -1,16 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {Button,Card, Icon, Image, Label} from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import moment from 'moment';
+import LikeButton from "./LikeButton"
+
+import {AuthContext} from '../context/auth'
 
  function PostCard({ post: { body, createdAt, id, username, likeCount, commentCount, likes}}) {
-   function likePost(){
-    console.log('Post Liked')
-
-   }
-   function commentOnPost(){
-       console.log("Comment on post")
-   }
+   const { user } = useContext(AuthContext);
+   
     return (
         <Card fluid>
             <Card.Content>
@@ -26,17 +24,9 @@ import moment from 'moment';
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <div className='ui two buttons'>
-                <Button as='div' labelPosition='right' onClick={likePost}>
-                 <Button color='blue' basic>
-                    <Icon name='heart' />
-                     
-                 </Button>
-                <Label as='a' basic color='blue' pointing='left'>
-                    {likeCount}
-                </Label>
-                 </Button>
-                 <Button as='div' labelPosition='right' onClick={commentOnPost}>
+    
+                <LikeButton post={{ id, likes, likeCount}}/>
+                 <Button labelPosition='right' as={Link} to={`/posts/${id}`}>
                  <Button color='red' basic>
                     <Icon name='comments' />
                      
@@ -45,7 +35,14 @@ import moment from 'moment';
                     {commentCount}
                 </Label>
                  </Button>
-                </div>
+                 {user && user.username === username && (
+                     <Button as="div" color="red" 
+                     floated="right"
+                     onClick={() => console.log('Post Delete')}>
+                         <Icon name="trash" style={{margin:0}}/>
+                     </Button>
+                 )}
+                
             </Card.Content>
     </Card>
     )
