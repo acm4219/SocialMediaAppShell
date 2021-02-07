@@ -76,7 +76,7 @@ const LOGIN_USER = gql`
         $password: String!
     ) {
         login(
-            username: $username
+            username: $username,
             password: $password            
         ){
             id
